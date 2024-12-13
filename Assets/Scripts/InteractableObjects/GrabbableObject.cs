@@ -17,8 +17,7 @@ public class GrabbableObject : MonoBehaviour
     {
         originalPos = transform.position;
         originalRot = transform.rotation;
-        Debug.Log("Start");
-        Debug.Log(originalPos);
+        
     }
 
     // Update is called once per frame
