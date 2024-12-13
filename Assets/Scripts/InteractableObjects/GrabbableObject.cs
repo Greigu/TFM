@@ -8,8 +8,6 @@ public class GrabbableObject : MonoBehaviour
 
     private bool isGrabed = false;
     public float mouseSensitivity = 500f;
-    float xRotation = 0f;
-    float yRotation = 0f;
     private Vector3 originalPos;
     private Quaternion originalRot;
     // Start is called before the first frame update
@@ -43,8 +41,6 @@ public class GrabbableObject : MonoBehaviour
         {
             transform.position = originalPos;
             transform.rotation = originalRot;
-            xRotation = 0f;
-            yRotation = 0f;
             Debug.Log(transform.position);
             
         }

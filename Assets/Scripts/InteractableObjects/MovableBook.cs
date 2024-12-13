@@ -9,7 +9,6 @@ public class MovableBook : MonoBehaviour
     private GameObject cam;
     private List<GameObject> positionsList = new List<GameObject>();
     private List<GameObject> booksList = new List<GameObject>();
-    private float grabRange = 5000000f;
     private GameObject player;
     private int firstBook = 0;
     private int secondBook = 0;
