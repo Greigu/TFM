@@ -31,21 +31,18 @@ public class MoveBooks : MonoBehaviour
         {
             RaycastHit hit;
             Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 5f);
-            //Debug.Log(hit.collider.gameObject.name);
             if(hit.collider != null)
             {
                 if (hit.collider.gameObject.tag.Equals("Book") && !isBookSelected)
                 {
                     bookOne = hit.collider.gameObject;
                     isBookSelected = true;
-                    Debug.Log("Found book 1");
 
                 }
                 else if (hit.collider.gameObject.tag.Equals("Book") && isBookSelected)
                 {
                     bookTwo = hit.collider.gameObject;
                     ChangePos(bookOne, bookTwo);
-                    Debug.Log("Found book 2");
                 }
                 else
                 {
@@ -56,21 +53,7 @@ public class MoveBooks : MonoBehaviour
                 ResetBooks();
             }
             
-            //RaycastHit[] hits = Physics.RaycastAll(cam.transform.position, cam.transform.forward, 200f);
-            //foreach (RaycastHit hit in hits)
-            //{
-            //    Debug.Log(hit.collider.gameObject.name);
-            //    if (hit.collider.tag.Equals("Book") && !isBookSelected)
-            //    {
-            //        bookOne = hit.collider.gameObject;
-            //        isBookSelected = true;
-            //    }
-            //    else if (hit.collider.gameObject.tag.Equals("Book") && isBookSelected)
-            //    {
-            //        bookTwo = hit.collider.gameObject;
-            //        ChangePos(bookOne, bookTwo);
-            //    }
-            //}
+            
         }
     }
 
@@ -85,8 +68,8 @@ public class MoveBooks : MonoBehaviour
 
     private void ResetBooks()
     {
+        Debug.Log("Reset");
         isBookSelected = false;
-        Debug.Log("No book found");
         bookOne = null;
         bookTwo = null;
     }

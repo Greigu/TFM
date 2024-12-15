@@ -14,6 +14,10 @@ public class DraggableDoor : MonoBehaviour
     private float initialCameraRotationY; // Rotación inicial de la cámara en el eje Y.
     private float initialDoorHeight; // Altura inicial de la puerta.
 
+    private void Start()
+    {
+        initialDoorHeight = door.position.y;
+    }
     void Update()
     {
         // Detectar si el jugador presiona el botón para "agarrar" la puerta.
@@ -26,7 +30,7 @@ public class DraggableDoor : MonoBehaviour
                 {
                     isDragging = true;
                     initialCameraRotationY = playerCamera.eulerAngles.x;
-                    initialDoorHeight = door.position.y;
+                    
                 }
             }
         }
@@ -45,15 +49,20 @@ public class DraggableDoor : MonoBehaviour
 
             // Actualizar la altura de la puerta basándose en la rotación.
             float newHeight = initialDoorHeight + (rotationDelta * sensitivity);
-            newHeight = Mathf.Clamp(newHeight, minHeight, maxHeight);
+            newHeight = Mathf.Clamp(newHeight, minHeight + initialDoorHeight, maxHeight + initialDoorHeight);
 
             door.position = new Vector3(door.position.x, newHeight, door.position.z);
+            print(newHeight-initialDoorHeight);
         }
 
         // Soltar el botón para dejar de arrastrar.
         if (Input.GetKeyUp(KeyCode.E))
         {
             isDragging = false;
+            if(door.position.y < initialDoorHeight + maxHeight)
+            {
+
+            }
         }
     }
 }

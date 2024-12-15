@@ -11,12 +11,12 @@ public class PickItem : MonoBehaviour
     private GameObject grabbedObject;
 
     private MouseLook mouseScript;
-    private PlayerMovement playerMovement;
+    private PlayerControls playerMovement;
     // Start is called before the first frame update
     void Start()
     {
         mouseScript = transform.GetComponent<MouseLook>();
-        playerMovement = transform.parent.GetComponent<PlayerMovement>();
+        playerMovement = transform.parent.GetComponent<PlayerControls>();
     }
 
     // Update is called once per frame
@@ -50,8 +50,13 @@ public class PickItem : MonoBehaviour
                 playerMovement.SetIsActiveMove(false);
                 grabbedObject = hit.collider.gameObject;
                 grabbedObject.GetComponent<GrabbableObject>().SetIsGrabbed(true);
+            }else if (hit.collider.CompareTag("Readable"))
+            {
+                print("Scroll Found");
+                string textToRead = hit.collider.gameObject.GetComponent<_TextContainer>().text;
+                TextController tContr = GameObject.Find("TextController").GetComponent<TextController>();
+                tContr.ChangeText(textToRead);
             }
-            
         }
     }
 }
