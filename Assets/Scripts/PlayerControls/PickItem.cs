@@ -55,7 +55,13 @@ public class PickItem : MonoBehaviour
                 print("Scroll Found");
                 string textToRead = hit.collider.gameObject.GetComponent<_TextContainer>().text;
                 TextController tContr = GameObject.Find("TextController").GetComponent<TextController>();
-                tContr.ChangeText(textToRead);
+                tContr.ChangeText(textToRead, false);
+            } else if (hit.collider.CompareTag("Speakable"))
+            {
+                print("speak");
+                string textToRead = hit.collider.gameObject.GetComponent<_TextContainer>().text;
+                TextController tContr = GameObject.Find("TextController").GetComponent<TextController>();
+                tContr.ChangeText(textToRead, true);
             }
         }
     }
