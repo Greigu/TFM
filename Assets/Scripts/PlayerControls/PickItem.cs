@@ -12,6 +12,9 @@ public class PickItem : MonoBehaviour
 
     private MouseLook mouseScript;
     private PlayerControls playerMovement;
+
+    public float lookRange = 20f;
+    private GameObject lastItem;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +25,7 @@ public class PickItem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CheckIfGlow();
         if (Input.GetMouseButtonDown(0))
         {
             TryGrab();
@@ -40,9 +44,7 @@ public class PickItem : MonoBehaviour
     {
         RaycastHit hit;
         if(Physics.Raycast(transform.position, transform.forward, out hit, grabRange))
-        {
-            float dist = hit.distance;
-            
+        {   
             if (hit.collider.CompareTag("Grabbable"))
             {
                 Debug.Log("Grabbed");
@@ -62,6 +64,29 @@ public class PickItem : MonoBehaviour
                 string textToRead = hit.collider.gameObject.GetComponent<_TextContainer>().text;
                 TextController tContr = GameObject.Find("TextController").GetComponent<TextController>();
                 tContr.ChangeText(textToRead, true);
+            }
+            
+        }
+    }
+
+    private void  CheckIfGlow()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit, lookRange))
+        {
+            if (hit.collider.gameObject != lastItem && lastItem != null)
+            {
+                print("Reset");
+                GlowItems glow = lastItem.GetComponent<GlowItems>();
+                glow.ResetMat(lastItem);
+                lastItem = null;
+            }
+            if (hit.collider.GetComponent<GlowItems>() != null)
+            {
+                lastItem = hit.collider.gameObject;
+                GlowItems glow = hit.collider.GetComponent<GlowItems>();
+                glow.ChangeMat(hit.collider.gameObject);
+
             }
         }
     }
