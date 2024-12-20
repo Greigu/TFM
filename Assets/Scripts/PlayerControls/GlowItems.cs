@@ -6,7 +6,6 @@ using static UnityEditor.Progress;
 
 public class GlowItems : MonoBehaviour
 {
-    private GameObject lastItem;
     public Color emisionC;
     //public void CheckifGlow(GameObject item)
     //{
@@ -50,7 +49,6 @@ public class GlowItems : MonoBehaviour
 
     public void ChangeMat(GameObject item)
     {
-        lastItem = item;
         foreach (Material mat in item.GetComponent<MeshRenderer>().materials)
         {
             mat.SetColor("_EmissionColor", emisionC);
