@@ -52,8 +52,6 @@ public class MoveBooks : MonoBehaviour
             {
                 ResetBooks();
             }
-            
-            
         }
     }
 
@@ -68,7 +66,6 @@ public class MoveBooks : MonoBehaviour
 
     private void ResetBooks()
     {
-        Debug.Log("Reset");
         isBookSelected = false;
         bookOne = null;
         bookTwo = null;

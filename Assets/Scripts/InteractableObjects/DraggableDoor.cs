@@ -52,7 +52,6 @@ public class DraggableDoor : MonoBehaviour
             newHeight = Mathf.Clamp(newHeight, minHeight + initialDoorHeight, maxHeight + initialDoorHeight);
 
             door.position = new Vector3(door.position.x, newHeight, door.position.z);
-            print(newHeight-initialDoorHeight);
         }
 
         // Soltar el botón para dejar de arrastrar.

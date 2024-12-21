@@ -36,14 +36,10 @@ public class TextController : MonoBehaviour
         if (isSpeak)
         {
             textSpeak.transform.parent.gameObject.SetActive(true);
-            Debug.Log(text);
-            Debug.Log(textToDisplayUI);
             textToDisplaySpeak.text = text;
         } else
         {
             textUI.transform.parent.gameObject.SetActive(true);
-            Debug.Log(text);
-            Debug.Log(textToDisplayUI);
             textToDisplayUI.text = text;
         }
         

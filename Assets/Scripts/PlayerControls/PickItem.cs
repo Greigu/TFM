@@ -60,7 +60,6 @@ public class PickItem : MonoBehaviour
                 tContr.ChangeText(textToRead, false);
             } else if (hit.collider.CompareTag("Speakable"))
             {
-                print("speak");
                 string textToRead = hit.collider.gameObject.GetComponent<_TextContainer>().text;
                 TextController tContr = GameObject.Find("TextController").GetComponent<TextController>();
                 tContr.ChangeText(textToRead, true);
@@ -76,7 +75,6 @@ public class PickItem : MonoBehaviour
         {
             if (hit.collider.gameObject != lastItem && lastItem != null)
             {
-                print("Reset");
                 GlowItems glow = lastItem.GetComponent<GlowItems>();
                 glow.ResetMat(lastItem);
                 lastItem = null;
