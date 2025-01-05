@@ -9,6 +9,7 @@ public class PickItem : MonoBehaviour
 
     public float grabRange = 5f;
     private GameObject grabbedObject;
+    private bool isGrabbed = false;
 
     private MouseLook mouseScript;
     private PlayerControls playerMovement;
@@ -26,17 +27,18 @@ public class PickItem : MonoBehaviour
     void Update()
     {
         CheckIfGlow();
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !isGrabbed)
         {
             TryGrab();
         }
-        if (Input.GetMouseButtonDown(1))
+        else if (Input.GetMouseButtonDown(0) && isGrabbed)
         {
             Debug.Log("No Grabbed");
             mouseScript.SetActiveMoveCamera(true);
             playerMovement.SetIsActiveMove(true);
             if(grabbedObject != null)
             grabbedObject.GetComponent<GrabbableObject>().SetIsGrabbed(false);
+            isGrabbed=false;
         }
     }
 
@@ -44,9 +46,11 @@ public class PickItem : MonoBehaviour
     {
         RaycastHit hit;
         if(Physics.Raycast(transform.position, transform.forward, out hit, grabRange))
-        {   
+        {
+            Debug.Log(hit.collider.tag);
             if (hit.collider.CompareTag("Grabbable"))
             {
+                isGrabbed=true;
                 Debug.Log("Grabbed");
                 mouseScript.SetActiveMoveCamera(false);
                 playerMovement.SetIsActiveMove(false);
@@ -55,14 +59,18 @@ public class PickItem : MonoBehaviour
             }else if (hit.collider.CompareTag("Readable"))
             {
                 print("Scroll Found");
-                string textToRead = hit.collider.gameObject.GetComponent<_TextContainer>().text;
+                string textToRead = hit.collider.gameObject.GetComponent<_TextContainer>().GetText();
                 TextController tContr = GameObject.Find("TextController").GetComponent<TextController>();
                 tContr.ChangeText(textToRead, false);
             } else if (hit.collider.CompareTag("Speakable"))
             {
-                string textToRead = hit.collider.gameObject.GetComponent<_TextContainer>().text;
+                string textToRead = hit.collider.gameObject.GetComponent<_TextContainer>().GetText();
                 TextController tContr = GameObject.Find("TextController").GetComponent<TextController>();
                 tContr.ChangeText(textToRead, true);
+            } else if (hit.collider.gameObject.CompareTag("Openable"))
+            {
+                OpenClassicDoor openScript = hit.collider.gameObject.GetComponent<OpenClassicDoor>();
+                openScript._OpenDoor();
             }
             
         }

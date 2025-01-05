@@ -15,6 +15,12 @@ public class GrabbableObject : MonoBehaviour
     {
         originalPos = transform.position;
         originalRot = transform.rotation;
+        GameObject a = GameObject.FindGameObjectWithTag("MainCamera");
+        foreach (Transform t in a.transform)
+        {
+            if(t.name.Equals("GrabbPosition"))
+            grabPosition = t;
+        }
         
     }
 

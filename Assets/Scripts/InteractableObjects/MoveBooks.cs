@@ -11,12 +11,14 @@ public class MoveBooks : MonoBehaviour
     private Vector3 posOne;
     private Vector3 posTwo;
     private bool isBookSelected = false;
+    private BookPuzzleController bpc;
 
     // Start is called before the first frame update
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         cam = GameObject.FindGameObjectWithTag("MainCamera");
+        bpc = GameObject.Find("BookCount").GetComponent<BookPuzzleController>();
     }
 
     // Update is called once per frame
@@ -62,6 +64,7 @@ public class MoveBooks : MonoBehaviour
         b1.transform.position = posTwo;
         b2.transform.position = posOne;
         isBookSelected = false;
+        bpc.CheckIfCompleted();
     }
 
     private void ResetBooks()

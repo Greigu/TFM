@@ -18,16 +18,17 @@ public class OpenClassicDoor : MonoBehaviour
     {
         door = this.gameObject;
         cam = GameObject.FindGameObjectWithTag("MainCamera");
-        initialRotation = transform.rotation;
+        initialRotation = transform.localRotation;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        OpenDoor();
+        //OpenDoor();
         if(isOpening)
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            transform.localRotation = Quaternion.RotateTowards(transform.localRotation, targetRotation, rotationSpeed * Time.deltaTime);
             this.isOpen = true;
         }
         else if(isClosing)
@@ -37,26 +38,29 @@ public class OpenClassicDoor : MonoBehaviour
         }
     }
 
-    private void OpenDoor()
-    {
-        if (Input.GetKeyDown(KeyCode.E)) // Cambia "E" si necesitas otro botón.
-        {
-            RaycastHit hit;
-            Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 5f);
-            if(hit.collider != null)
-            {
-                if (hit.collider.gameObject.Equals(door))
-                {
-                    StartCoroutine(RotateDoor(isOpen));
-                }
-            }
-        }
-    }
+    //private void OpenDoor()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.E)) // Cambia "E" si necesitas otro botón.
+    //    {
+    //        RaycastHit hit;
+    //        Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, 5f);
+    //        if(hit.collider != null)
+    //        {
+    //            Debug.Log(hit.collider.gameObject.name);
+    //            if (hit.collider.gameObject.Equals(door))
+    //            {
+    //                StartCoroutine(RotateDoor(isOpen));
+    //            }
+    //        }
+    //    }
+    //}
 
     IEnumerator RotateDoor(bool isOpen)
     {
+        print(2 + "_" + isOpen);
         if (!isOpen)
         {
+            print(3);
             isOpening = true;
             yield return new WaitForSeconds(2);
             isOpening = false;
@@ -69,5 +73,11 @@ public class OpenClassicDoor : MonoBehaviour
             //isClosing = false;
         }
         yield return null;
+    }
+
+    public void _OpenDoor()
+    {
+        print(1);
+        StartCoroutine(RotateDoor(isOpen));
     }
 }

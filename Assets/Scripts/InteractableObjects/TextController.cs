@@ -9,6 +9,7 @@ public class TextController : MonoBehaviour
     private TMP_Text textToDisplaySpeak;
     private GameObject textUI;
     private GameObject textSpeak;
+    public int waitSeconds = 3;
     public bool isReading = false;
     // Start is called before the first frame update
     void Start()
@@ -23,15 +24,16 @@ public class TextController : MonoBehaviour
 
     private void Update()
     {
-        if (isReading && Input.GetKeyDown(KeyCode.E)){
-            isReading = false;
-            textUI.transform.parent.gameObject.SetActive(false);
-            textSpeak.transform.parent.gameObject.SetActive(false);
-        }
+        //if (isReading && Input.GetKeyDown(KeyCode.E)){ //Press button to cancel
+        //    isReading = false;
+        //    textUI.transform.parent.gameObject.SetActive(false);
+        //    textSpeak.transform.parent.gameObject.SetActive(false);
+        //}
     }
 
     public void ChangeText(string text, bool isSpeak)
     {
+        StartCoroutine(TimeToRead(waitSeconds));// Time to cancel
         isReading = true;
         if (isSpeak)
         {
@@ -43,5 +45,12 @@ public class TextController : MonoBehaviour
             textToDisplayUI.text = text;
         }
         
+    }
+    IEnumerator TimeToRead(int count)
+    {
+        yield return new WaitForSeconds(count);
+        isReading = false;
+        textUI.transform.parent.gameObject.SetActive(false);
+        textSpeak.transform.parent.gameObject.SetActive(false);
     }
 }

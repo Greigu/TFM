@@ -19,7 +19,28 @@ public class PlayerControls : MonoBehaviour
     Vector3 velocity;
     bool isGrounded;
 
-    void Update()
+    private bool isPaused;
+    private GameController gameController;
+
+    private void Start()
+    {
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
+    }
+    private void Update()
+    {
+        isPaused = gameController.GetIsPaused();
+        if (!isPaused )
+        {
+            Controls();
+        }
+    }
+
+    public void SetIsActiveMove(bool a)
+    {
+        isActiveMove = a;
+    }
+
+    private void Controls()
     {
         // Ground check
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -40,10 +61,10 @@ public class PlayerControls : MonoBehaviour
             controller.Move(move * speed * Time.deltaTime);
 
             // Jumping
-            if (Input.GetButtonDown("Jump") && isGrounded)
-            {
-                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            }
+            //if (Input.GetButtonDown("Jump") && isGrounded)
+            //{
+            //    velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            //}
         }
 
 
@@ -51,10 +72,5 @@ public class PlayerControls : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
-    }
-
-    public void SetIsActiveMove(bool a)
-    {
-        isActiveMove = a;
     }
 }

@@ -60,7 +60,7 @@ public class DraggableDoor : MonoBehaviour
             isDragging = false;
             if(door.position.y < initialDoorHeight + maxHeight)
             {
-
+                door.position = new Vector3(door.position.x, initialDoorHeight, door.position.z);
             }
         }
     }
