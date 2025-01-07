@@ -5,10 +5,12 @@ using UnityEngine;
 public class BookPuzzleController : MonoBehaviour
 {
 
-    private string[] correctOrder = { "1", "4", "3", "2", "5" }; //Canviar per l'ordre desitjat
+    private string[] correctOrder = { "Book_8", "Book_7", "Book_6", "Book_5", "Book_4", "Book_3", "Book_2", "Book_1" };
+    private GameController gameController;
     // Start is called before the first frame update
     void Start()
     {
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
        GetOrderedBooks();
     }
 
@@ -38,7 +40,9 @@ public class BookPuzzleController : MonoBehaviour
         }
         if (isCorrect)
         {
+            gameController.UnlockEnd();
             print("Correct Combination");
+            //TODO Sound of unlocked fountain
         }
     }
 

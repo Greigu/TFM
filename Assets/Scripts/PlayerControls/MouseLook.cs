@@ -17,8 +17,7 @@ public class MouseLook : MonoBehaviour
     {
         //Cursor.lockState = CursorLockMode.Locked;
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
-        flashLight = GameObject.Find("FlashLight");
-        flashLight.SetActive(false);
+       
     }
 
     void Update()
@@ -47,18 +46,7 @@ public class MouseLook : MonoBehaviour
             transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
             playerBody.Rotate(Vector3.up * mouseX);
 
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                if (flashLight.activeSelf)
-                {
-                    flashLight.SetActive(false);
-                }
-                else
-                {
-                    flashLight.SetActive(true);
-                }
-
-            }
+            
         }
     }
 }

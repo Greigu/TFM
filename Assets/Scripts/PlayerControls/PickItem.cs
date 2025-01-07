@@ -16,11 +16,17 @@ public class PickItem : MonoBehaviour
 
     public float lookRange = 20f;
     private GameObject lastItem;
+
+    private GameObject flashLight;
+    private bool isFlashActive = true; //TODO Change in final version
+    private int keyItemsPicked = 0;
     // Start is called before the first frame update
     void Start()
     {
         mouseScript = transform.GetComponent<MouseLook>();
         playerMovement = transform.parent.GetComponent<PlayerControls>();
+        flashLight = GameObject.Find("FlashLight");
+        flashLight.SetActive(false);
     }
 
     // Update is called once per frame
@@ -39,6 +45,19 @@ public class PickItem : MonoBehaviour
             if(grabbedObject != null)
             grabbedObject.GetComponent<GrabbableObject>().SetIsGrabbed(false);
             isGrabbed=false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F) && isFlashActive)
+        {
+            if (flashLight.activeSelf)
+            {
+                flashLight.SetActive(false);
+            }
+            else
+            {
+                flashLight.SetActive(true);
+            }
+
         }
     }
 
@@ -71,6 +90,17 @@ public class PickItem : MonoBehaviour
             {
                 OpenClassicDoor openScript = hit.collider.gameObject.GetComponent<OpenClassicDoor>();
                 openScript._OpenDoor();
+            } else if (hit.collider.gameObject.CompareTag("Pickable"))
+            {
+                if (hit.collider.gameObject.name.Equals("GrabbableTorch"))
+                {
+                    isFlashActive = true;
+                }
+                else
+                {
+                    keyItemsPicked++;
+                }
+                hit.collider.gameObject.SetActive(false);
             }
             
         }
@@ -95,5 +125,10 @@ public class PickItem : MonoBehaviour
 
             }
         }
+    }
+
+    public int GetKeyItems()
+    {
+        return keyItemsPicked;
     }
 }

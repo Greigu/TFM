@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour
     private bool isPaused = true;
     public GameObject MenuUI;
     private GameObject HowToPlayUI;
+
+    public GameObject fountain;
     void Start()
     {
         HowToPlayUI = GameObject.Find("HowToPlayUI");
@@ -18,8 +20,15 @@ public class GameController : MonoBehaviour
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.P)) {
-           SetIsPaused(!GetIsPaused());
-           MenuUI.SetActive(!MenuUI.activeSelf);
+            SetIsPaused(!GetIsPaused());
+             MenuUI.SetActive(!MenuUI.activeSelf);
+            if(!GetIsPaused())
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            } else {
+                Cursor.lockState = CursorLockMode.None;
+            }
+
         }
     }
 
@@ -55,5 +64,11 @@ public class GameController : MonoBehaviour
     public void ShowMenu()
     {
         MenuUI.SetActive(true);
+    }
+
+    public void UnlockEnd()
+    {
+        fountain.transform.localPosition = new Vector3(fountain.transform.localPosition.x, 22.5f, fountain.transform.localPosition.z);
+        fountain.transform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
     }
 }

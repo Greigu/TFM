@@ -9,11 +9,12 @@ TagManager:
   - Readable
   - Speakable
   - Openable
+  - Pickable
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Ground
