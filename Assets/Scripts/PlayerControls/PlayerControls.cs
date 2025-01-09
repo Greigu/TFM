@@ -20,9 +20,12 @@ public class PlayerControls : MonoBehaviour
     private bool isPaused;
     private GameController gameController;
 
+    private AudioSource audio;
+
     private void Start()
     {
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        audio = GetComponent<AudioSource>();
     }
     private void Update()
     {
@@ -53,7 +56,13 @@ public class PlayerControls : MonoBehaviour
         {
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");
-
+            if((x != 0 || z!= 0) && !audio.isPlaying)
+            {
+                audio.Play();
+            }
+            else{
+                audio.Pause();
+            }
             Vector3 move = transform.right * x + transform.forward * z;
 
             controller.Move(move * speed * Time.deltaTime);

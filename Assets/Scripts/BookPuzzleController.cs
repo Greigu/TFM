@@ -7,10 +7,12 @@ public class BookPuzzleController : MonoBehaviour
 
     private string[] correctOrder = { "Book_8", "Book_7", "Book_6", "Book_5", "Book_4", "Book_3", "Book_2", "Book_1" };
     private GameController gameController;
+    private AudioSource audio;
     // Start is called before the first frame update
     void Start()
     {
         gameController = GameObject.Find("GameController").GetComponent<GameController>();
+        audio = GetComponent<AudioSource>();
        GetOrderedBooks();
     }
 
@@ -20,7 +22,6 @@ public class BookPuzzleController : MonoBehaviour
         var n = GetBooks().OrderBy(entry => entry.Value);
         foreach (var item in n)
         {
-            print(item.Key.name + "-" + item.Value);
             booksDictOrdered.Add(item.Key, item.Value);
         }
         return booksDictOrdered;
@@ -42,7 +43,7 @@ public class BookPuzzleController : MonoBehaviour
         {
             gameController.UnlockEnd();
             print("Correct Combination");
-            //TODO Sound of unlocked fountain
+            audio.Play();
         }
     }
 
@@ -64,7 +65,6 @@ public class BookPuzzleController : MonoBehaviour
         foreach (GameObject item in books)
         {
             float a = Vector3.Distance(transform.position, item.transform.position);
-            //print(item.name + "-" + Vector3.Distance(transform.position, item.transform.position));
             booksDict.Add(item, a);
         }
         return booksDict;

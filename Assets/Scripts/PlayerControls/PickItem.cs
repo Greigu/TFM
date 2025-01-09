@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -18,8 +19,10 @@ public class PickItem : MonoBehaviour
     private GameObject lastItem;
 
     private GameObject flashLight;
-    private bool isFlashActive = true; //TODO Change in final version
+    private bool isFlashActive = false; //False in final version
     private int keyItemsPicked = 0;
+    private Dictionary<string, bool> ItemsPicked = new Dictionary<string, bool>();
+    private string[] items = { "KNIFE", "EvilBook", "IDOL" };
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +30,12 @@ public class PickItem : MonoBehaviour
         playerMovement = transform.parent.GetComponent<PlayerControls>();
         flashLight = GameObject.Find("FlashLight");
         flashLight.SetActive(false);
+        foreach (var item in items)
+        {
+            ItemsPicked.Add(item, false);
+        }
+        ApplicationModel.itemsGrabbed = ItemsPicked;
+
     }
 
     // Update is called once per frame
@@ -42,9 +51,9 @@ public class PickItem : MonoBehaviour
             Debug.Log("No Grabbed");
             mouseScript.SetActiveMoveCamera(true);
             playerMovement.SetIsActiveMove(true);
-            if(grabbedObject != null)
-            grabbedObject.GetComponent<GrabbableObject>().SetIsGrabbed(false);
-            isGrabbed=false;
+            if (grabbedObject != null)
+                grabbedObject.GetComponent<GrabbableObject>().SetIsGrabbed(false);
+            isGrabbed = false;
         }
 
         if (Input.GetKeyDown(KeyCode.F) && isFlashActive)
@@ -64,71 +73,120 @@ public class PickItem : MonoBehaviour
     private void TryGrab()
     {
         RaycastHit hit;
-        if(Physics.Raycast(transform.position, transform.forward, out hit, grabRange))
+        if (Physics.Raycast(transform.position, transform.forward, out hit, grabRange))
         {
             Debug.Log(hit.collider.tag);
             if (hit.collider.CompareTag("Grabbable"))
             {
-                isGrabbed=true;
+                isGrabbed = true;
                 Debug.Log("Grabbed");
                 mouseScript.SetActiveMoveCamera(false);
                 playerMovement.SetIsActiveMove(false);
                 grabbedObject = hit.collider.gameObject;
                 grabbedObject.GetComponent<GrabbableObject>().SetIsGrabbed(true);
-            }else if (hit.collider.CompareTag("Readable"))
+            }
+            else if (hit.collider.CompareTag("Readable"))
             {
-                print("Scroll Found");
                 string textToRead = hit.collider.gameObject.GetComponent<_TextContainer>().GetText();
                 TextController tContr = GameObject.Find("TextController").GetComponent<TextController>();
                 tContr.ChangeText(textToRead, false);
-            } else if (hit.collider.CompareTag("Speakable"))
+            }
+            else if (hit.collider.CompareTag("Speakable"))
             {
                 string textToRead = hit.collider.gameObject.GetComponent<_TextContainer>().GetText();
                 TextController tContr = GameObject.Find("TextController").GetComponent<TextController>();
                 tContr.ChangeText(textToRead, true);
-            } else if (hit.collider.gameObject.CompareTag("Openable"))
+            }
+            else if (hit.collider.gameObject.CompareTag("Openable"))
             {
                 OpenClassicDoor openScript = hit.collider.gameObject.GetComponent<OpenClassicDoor>();
                 openScript._OpenDoor();
-            } else if (hit.collider.gameObject.CompareTag("Pickable"))
+            }
+            else if (hit.collider.gameObject.CompareTag("Pickable"))
             {
                 if (hit.collider.gameObject.name.Equals("GrabbableTorch"))
                 {
                     isFlashActive = true;
+                    flashLight.SetActive(true);
                 }
                 else
                 {
                     keyItemsPicked++;
+                    ItemsPicked[hit.collider.gameObject.name] = true;
+                    ApplicationModel.itemsGrabbed = ItemsPicked;
+                    
                 }
                 hit.collider.gameObject.SetActive(false);
             }
-            
+
         }
     }
 
-    private void  CheckIfGlow()
+    private void CheckIfGlow()
     {
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, lookRange))
         {
-            if (hit.collider.gameObject != lastItem && lastItem != null)
+            
+            if ((hit.collider.gameObject != lastItem && lastItem != null) && !hit.collider.gameObject.name.Equals("EvilBook") && !lastItem.name.Equals("EvilBook"))
             {
                 GlowItems glow = lastItem.GetComponent<GlowItems>();
                 glow.ResetMat(lastItem);
                 lastItem = null;
             }
-            if (hit.collider.GetComponent<GlowItems>() != null)
+            if ((hit.collider.GetComponent<GlowItems>() != null) && !hit.collider.gameObject.name.Equals("EvilBook"))
             {
                 lastItem = hit.collider.gameObject;
                 GlowItems glow = hit.collider.GetComponent<GlowItems>();
                 glow.ChangeMat(hit.collider.gameObject);
-
             }
+            if (hit.collider.gameObject.name.Equals("EvilBook"))
+            {
+                if (hit.collider.GetComponent<GlowItems>() != null)
+                {
+                    lastItem = hit.collider.gameObject;
+                    foreach (Transform t in lastItem.transform)
+                    {
+                        GlowItems glow = t.GetComponent<GlowItems>();
+                        glow.ChangeMat(t.gameObject);
+                    }
+                }
+            }
+            if (lastItem != null)
+            {
+                if (hit.collider.gameObject != lastItem && lastItem != null)
+                {
+                    GameObject book = lastItem;
+                    foreach (Transform t in book.transform)
+                    {
+                        GlowItems glow = t.GetComponent<GlowItems>();
+                        glow.ResetMat(t.gameObject);
+                    }
+                    lastItem = null;
+                }
+            }
+            //
+            //if (lastItem != null)
+            //{
+            //    if (lastItem.name.Equals("EvilBook"))
+            //    {
+            //        if (hit.collider.gameObject != lastItem && lastItem != null)
+            //        {
+            //            GameObject book = lastItem;
+            //            foreach (Transform t in book.transform)
+            //            {
+            //                GlowItems glow = t.GetComponent<GlowItems>();
+            //                glow.ResetMat(t.gameObject);
+            //            }
+            //            lastItem = null;
+            //        }
+            //    }
+            //}
         }
     }
 
-    public int GetKeyItems()
+    public Dictionary<string, bool> GetKeyItems()
     {
-        return keyItemsPicked;
+        return ItemsPicked;
     }
 }
